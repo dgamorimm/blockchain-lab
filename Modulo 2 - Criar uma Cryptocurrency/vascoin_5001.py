@@ -4,6 +4,7 @@ from datetime import datetime
 from uuid import uuid4
 from urllib.parse import urlparse
 import hashlib, json, requests
+import logging, json
 
 # ? Parte 1 = Criar um Blockchain 
 
@@ -147,8 +148,8 @@ def add_transaction():
 
 @app.route('/connect_node', methods=['POST'])
 def connect_node():
-    json = requests.get_json()
-    nodes = json.get('nodes')
+    json_node = json.loads(request.get_data().decode('utf-8'))
+    nodes = json_node.get('nodes')
     if nodes is None:
         return "Empty", 400
     for node in nodes:
@@ -174,4 +175,4 @@ def replace_chain():
         }
     return jsonify(response), 201
     
-app.run(host='127.0.0.1', port=5000 , debug=True)
+app.run(host='127.0.0.1', port=5001 , debug=True)

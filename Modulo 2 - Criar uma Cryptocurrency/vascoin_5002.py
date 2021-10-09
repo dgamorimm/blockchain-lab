@@ -105,7 +105,7 @@ def mine_block():
     previous_proof = previous_block['proof']
     proof = blockchain.proof_of_work(previous_proof)
     previous_hash = blockchain.hash(previous_block)
-    blockchain.add_transaction(sender=node_address, receiver='Douglas', amount=1)
+    blockchain.add_transaction(sender=node_address, receiver='Paula', amount=1)
     
     block = blockchain.create_block(proof, previous_hash)
     response = {
@@ -147,7 +147,7 @@ def add_transaction():
 
 @app.route('/connect_node', methods=['POST'])
 def connect_node():
-    json = requests.get_json()
+    json = request.get_json()
     nodes = json.get('nodes')
     if nodes is None:
         return "Empty", 400
@@ -174,4 +174,4 @@ def replace_chain():
         }
     return jsonify(response), 201
     
-app.run(host='127.0.0.1', port=5000 , debug=True)
+app.run(host='127.0.0.1', port=5002, debug=True)
