@@ -54,7 +54,7 @@ class Blockchain:
                 return False
             previous_proof = previous_block['proof']
             proof = block['proof']
-            hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2)).hexdigest()
+            hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode()).hexdigest()
             if hash_operation[:4] != '0000':
                 return False
             previous_block = block
@@ -138,17 +138,17 @@ def is_valid():
 
 @app.route('/add_transaction', methods=['POST'])
 def add_transaction():
-    json = requests.get_json()
+    json_node = json.loads(request.get_data().decode())
     transaction_key = ['sender', 'receiver', 'amount']
-    if not all(key in json for key in transaction_key):
+    if not all(key in json_node for key in transaction_key):
         return 'Alguns elementos estao faltando', 400
-    index = blockchain.add_transaction(json['sender'], json['receiver'], json['amount'])
+    index = blockchain.add_transaction(json_node['sender'], json_node['receiver'], json_node['amount'])
     response = {'message' : f'Esta transacao sera adicionada ao bloco {index}'}
     return jsonify(response), 201 # código utilizado quando temos um post
 
 @app.route('/connect_node', methods=['POST'])
 def connect_node():
-    json_node = json.loads(request.get_data().decode('utf-8'))
+    json_node = json.loads(request.get_data().decode())
     nodes = json_node.get('nodes')
     if nodes is None:
         return "Empty", 400
